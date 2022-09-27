@@ -1,0 +1,27 @@
+version: '3.7'
+
+networks:
+    internal:
+        driver: bridge
+services:
+    # PHP
+    php:
+        image: webdevops/php-nginx-dev:8.1
+        container_name: php
+        working_dir: /var/www/app
+        volumes:
+            - .:/var/www/app
+        environment:
+            - WEB_DOCUMENT_ROOT=/var/www/app/public
+            - PHP_DEBUGGER="xdebug"
+            - XDEBUG_MODE=debug
+            - XDEBUG_START_WITH_REQUEST=yes
+            - XDEBUG_CLIENT_HOST=host.docker.internal
+            - XDEBUG_CLIENT_PORT=9090
+            - XDEBUG_OUTPUT_DIR=/var/www/app/.xdebug
+        ports:
+            - "8080:80"
+        expose:
+            - 9090
+        networks:
+            - internal
